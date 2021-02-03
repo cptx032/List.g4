@@ -11,7 +11,7 @@ else:
 
 def serializedATN():
     with StringIO() as buf:
-        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\r")
+        buf.write("\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\16")
         buf.write("\65\4\2\t\2\4\3\t\3\4\4\t\4\4\5\t\5\3\2\6\2\f\n\2\r\2")
         buf.write("\16\2\r\3\3\3\3\3\3\3\3\3\3\5\3\25\n\3\3\4\3\4\3\4\3\4")
         buf.write("\3\4\3\4\5\4\35\n\4\3\4\3\4\3\4\3\4\3\4\3\4\7\4%\n\4\f")
@@ -48,7 +48,7 @@ class ListParser ( Parser ):
 
     symbolicNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
                       "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "NOME", "INT" ]
+                      "<INVALID>", "<INVALID>", "NOME", "INT", "SPACE" ]
 
     RULE_programa = 0
     RULE_comando = 1
@@ -69,6 +69,7 @@ class ListParser ( Parser ):
     T__8=9
     NOME=10
     INT=11
+    SPACE=12
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -103,6 +104,12 @@ class ListParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitPrograma" ):
                 listener.exitPrograma(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitPrograma" ):
+                return visitor.visitPrograma(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -142,24 +149,66 @@ class ListParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
+
+        def getRuleIndex(self):
+            return ListParser.RULE_comando
+
+     
+        def copyFrom(self, ctx:ParserRuleContext):
+            super().copyFrom(ctx)
+
+
+
+    class AtribuicaoContext(ComandoContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ListParser.ComandoContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
         def NOME(self):
             return self.getToken(ListParser.NOME, 0)
+        def exp(self):
+            return self.getTypedRuleContext(ListParser.ExpContext,0)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterAtribuicao" ):
+                listener.enterAtribuicao(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitAtribuicao" ):
+                listener.exitAtribuicao(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitAtribuicao" ):
+                return visitor.visitAtribuicao(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class ImpressaoContext(ComandoContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ListParser.ComandoContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
 
         def exp(self):
             return self.getTypedRuleContext(ListParser.ExpContext,0)
 
 
-        def getRuleIndex(self):
-            return ListParser.RULE_comando
-
         def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterComando" ):
-                listener.enterComando(self)
+            if hasattr( listener, "enterImpressao" ):
+                listener.enterImpressao(self)
 
         def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitComando" ):
-                listener.exitComando(self)
+            if hasattr( listener, "exitImpressao" ):
+                listener.exitImpressao(self)
 
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitImpressao" ):
+                return visitor.visitImpressao(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -172,6 +221,7 @@ class ListParser ( Parser ):
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [ListParser.NOME]:
+                localctx = ListParser.AtribuicaoContext(self, localctx)
                 self.enterOuterAlt(localctx, 1)
                 self.state = 13
                 self.match(ListParser.NOME)
@@ -181,6 +231,7 @@ class ListParser ( Parser ):
                 self.exp(0)
                 pass
             elif token in [ListParser.T__1]:
+                localctx = ListParser.ImpressaoContext(self, localctx)
                 self.enterOuterAlt(localctx, 2)
                 self.state = 16
                 self.match(ListParser.T__1)
@@ -206,15 +257,20 @@ class ListParser ( Parser ):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def NOME(self):
-            return self.getToken(ListParser.NOME, 0)
 
-        def lista(self):
-            return self.getTypedRuleContext(ListParser.ListaContext,0)
+        def getRuleIndex(self):
+            return ListParser.RULE_exp
+
+     
+        def copyFrom(self, ctx:ParserRuleContext):
+            super().copyFrom(ctx)
 
 
-        def INT(self):
-            return self.getToken(ListParser.INT, 0)
+    class ConcatenacaoContext(ExpContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ListParser.ExpContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
 
         def exp(self, i:int=None):
             if i is None:
@@ -223,16 +279,164 @@ class ListParser ( Parser ):
                 return self.getTypedRuleContext(ListParser.ExpContext,i)
 
 
-        def getRuleIndex(self):
-            return ListParser.RULE_exp
-
         def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterExp" ):
-                listener.enterExp(self)
+            if hasattr( listener, "enterConcatenacao" ):
+                listener.enterConcatenacao(self)
 
         def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitExp" ):
-                listener.exitExp(self)
+            if hasattr( listener, "exitConcatenacao" ):
+                listener.exitConcatenacao(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitConcatenacao" ):
+                return visitor.visitConcatenacao(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class DefinicaoListaContext(ExpContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ListParser.ExpContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def lista(self):
+            return self.getTypedRuleContext(ListParser.ListaContext,0)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterDefinicaoLista" ):
+                listener.enterDefinicaoLista(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitDefinicaoLista" ):
+                listener.exitDefinicaoLista(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitDefinicaoLista" ):
+                return visitor.visitDefinicaoLista(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class SomaContext(ExpContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ListParser.ExpContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def exp(self, i:int=None):
+            if i is None:
+                return self.getTypedRuleContexts(ListParser.ExpContext)
+            else:
+                return self.getTypedRuleContext(ListParser.ExpContext,i)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterSoma" ):
+                listener.enterSoma(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitSoma" ):
+                listener.exitSoma(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitSoma" ):
+                return visitor.visitSoma(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class BooleanTrueContext(ExpContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ListParser.ExpContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterBooleanTrue" ):
+                listener.enterBooleanTrue(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitBooleanTrue" ):
+                listener.exitBooleanTrue(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitBooleanTrue" ):
+                return visitor.visitBooleanTrue(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class BooleanFalseContext(ExpContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ListParser.ExpContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterBooleanFalse" ):
+                listener.enterBooleanFalse(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitBooleanFalse" ):
+                listener.exitBooleanFalse(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitBooleanFalse" ):
+                return visitor.visitBooleanFalse(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class VariavelContext(ExpContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ListParser.ExpContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def NOME(self):
+            return self.getToken(ListParser.NOME, 0)
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterVariavel" ):
+                listener.enterVariavel(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitVariavel" ):
+                listener.exitVariavel(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitVariavel" ):
+                return visitor.visitVariavel(self)
+            else:
+                return visitor.visitChildren(self)
+
+
+    class IntegerContext(ExpContext):
+
+        def __init__(self, parser, ctx:ParserRuleContext): # actually a ListParser.ExpContext
+            super().__init__(parser)
+            self.copyFrom(ctx)
+
+        def INT(self):
+            return self.getToken(ListParser.INT, 0)
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterInteger" ):
+                listener.enterInteger(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitInteger" ):
+                listener.exitInteger(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitInteger" ):
+                return visitor.visitInteger(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 
@@ -249,22 +453,38 @@ class ListParser ( Parser ):
             self._errHandler.sync(self)
             token = self._input.LA(1)
             if token in [ListParser.NOME]:
+                localctx = ListParser.VariavelContext(self, localctx)
+                self._ctx = localctx
+                _prevctx = localctx
+
                 self.state = 21
                 self.match(ListParser.NOME)
                 pass
             elif token in [ListParser.T__6]:
+                localctx = ListParser.DefinicaoListaContext(self, localctx)
+                self._ctx = localctx
+                _prevctx = localctx
                 self.state = 22
                 self.lista()
                 pass
             elif token in [ListParser.INT]:
+                localctx = ListParser.IntegerContext(self, localctx)
+                self._ctx = localctx
+                _prevctx = localctx
                 self.state = 23
                 self.match(ListParser.INT)
                 pass
             elif token in [ListParser.T__4]:
+                localctx = ListParser.BooleanFalseContext(self, localctx)
+                self._ctx = localctx
+                _prevctx = localctx
                 self.state = 24
                 self.match(ListParser.T__4)
                 pass
             elif token in [ListParser.T__5]:
+                localctx = ListParser.BooleanTrueContext(self, localctx)
+                self._ctx = localctx
+                _prevctx = localctx
                 self.state = 25
                 self.match(ListParser.T__5)
                 pass
@@ -284,7 +504,7 @@ class ListParser ( Parser ):
                     self._errHandler.sync(self)
                     la_ = self._interp.adaptivePredict(self._input,3,self._ctx)
                     if la_ == 1:
-                        localctx = ListParser.ExpContext(self, _parentctx, _parentState)
+                        localctx = ListParser.ConcatenacaoContext(self, ListParser.ExpContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_exp)
                         self.state = 28
                         if not self.precpred(self._ctx, 7):
@@ -297,7 +517,7 @@ class ListParser ( Parser ):
                         pass
 
                     elif la_ == 2:
-                        localctx = ListParser.ExpContext(self, _parentctx, _parentState)
+                        localctx = ListParser.SomaContext(self, ListParser.ExpContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_exp)
                         self.state = 31
                         if not self.precpred(self._ctx, 6):
@@ -347,6 +567,12 @@ class ListParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitLista" ):
                 listener.exitLista(self)
+
+        def accept(self, visitor:ParseTreeVisitor):
+            if hasattr( visitor, "visitLista" ):
+                return visitor.visitLista(self)
+            else:
+                return visitor.visitChildren(self)
 
 
 

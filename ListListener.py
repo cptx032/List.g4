@@ -17,21 +17,84 @@ class ListListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by ListParser#comando.
-    def enterComando(self, ctx:ListParser.ComandoContext):
+    # Enter a parse tree produced by ListParser#atribuicao.
+    def enterAtribuicao(self, ctx:ListParser.AtribuicaoContext):
         pass
 
-    # Exit a parse tree produced by ListParser#comando.
-    def exitComando(self, ctx:ListParser.ComandoContext):
+    # Exit a parse tree produced by ListParser#atribuicao.
+    def exitAtribuicao(self, ctx:ListParser.AtribuicaoContext):
         pass
 
 
-    # Enter a parse tree produced by ListParser#exp.
-    def enterExp(self, ctx:ListParser.ExpContext):
+    # Enter a parse tree produced by ListParser#impressao.
+    def enterImpressao(self, ctx:ListParser.ImpressaoContext):
         pass
 
-    # Exit a parse tree produced by ListParser#exp.
-    def exitExp(self, ctx:ListParser.ExpContext):
+    # Exit a parse tree produced by ListParser#impressao.
+    def exitImpressao(self, ctx:ListParser.ImpressaoContext):
+        pass
+
+
+    # Enter a parse tree produced by ListParser#concatenacao.
+    def enterConcatenacao(self, ctx:ListParser.ConcatenacaoContext):
+        pass
+
+    # Exit a parse tree produced by ListParser#concatenacao.
+    def exitConcatenacao(self, ctx:ListParser.ConcatenacaoContext):
+        pass
+
+
+    # Enter a parse tree produced by ListParser#definicaoLista.
+    def enterDefinicaoLista(self, ctx:ListParser.DefinicaoListaContext):
+        pass
+
+    # Exit a parse tree produced by ListParser#definicaoLista.
+    def exitDefinicaoLista(self, ctx:ListParser.DefinicaoListaContext):
+        pass
+
+
+    # Enter a parse tree produced by ListParser#soma.
+    def enterSoma(self, ctx:ListParser.SomaContext):
+        pass
+
+    # Exit a parse tree produced by ListParser#soma.
+    def exitSoma(self, ctx:ListParser.SomaContext):
+        pass
+
+
+    # Enter a parse tree produced by ListParser#booleanTrue.
+    def enterBooleanTrue(self, ctx:ListParser.BooleanTrueContext):
+        pass
+
+    # Exit a parse tree produced by ListParser#booleanTrue.
+    def exitBooleanTrue(self, ctx:ListParser.BooleanTrueContext):
+        pass
+
+
+    # Enter a parse tree produced by ListParser#booleanFalse.
+    def enterBooleanFalse(self, ctx:ListParser.BooleanFalseContext):
+        pass
+
+    # Exit a parse tree produced by ListParser#booleanFalse.
+    def exitBooleanFalse(self, ctx:ListParser.BooleanFalseContext):
+        pass
+
+
+    # Enter a parse tree produced by ListParser#variavel.
+    def enterVariavel(self, ctx:ListParser.VariavelContext):
+        pass
+
+    # Exit a parse tree produced by ListParser#variavel.
+    def exitVariavel(self, ctx:ListParser.VariavelContext):
+        pass
+
+
+    # Enter a parse tree produced by ListParser#integer.
+    def enterInteger(self, ctx:ListParser.IntegerContext):
+        pass
+
+    # Exit a parse tree produced by ListParser#integer.
+    def exitInteger(self, ctx:ListParser.IntegerContext):
         pass
 
 
