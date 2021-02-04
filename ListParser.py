@@ -21,11 +21,11 @@ def serializedATN():
         buf.write("\2\2\f\r\3\2\2\2\r\13\3\2\2\2\r\16\3\2\2\2\16\3\3\2\2")
         buf.write("\2\17\20\7\f\2\2\20\21\7\3\2\2\21\25\5\6\4\2\22\23\7\4")
         buf.write("\2\2\23\25\5\6\4\2\24\17\3\2\2\2\24\22\3\2\2\2\25\5\3")
-        buf.write("\2\2\2\26\27\b\4\1\2\27\35\7\f\2\2\30\35\5\b\5\2\31\35")
+        buf.write("\2\2\2\26\27\b\4\1\2\27\35\5\b\5\2\30\35\7\f\2\2\31\35")
         buf.write("\7\r\2\2\32\35\7\7\2\2\33\35\7\b\2\2\34\26\3\2\2\2\34")
         buf.write("\30\3\2\2\2\34\31\3\2\2\2\34\32\3\2\2\2\34\33\3\2\2\2")
         buf.write("\35&\3\2\2\2\36\37\f\t\2\2\37 \7\5\2\2 %\5\6\4\n!\"\f")
-        buf.write("\b\2\2\"#\7\6\2\2#%\5\6\4\t$\36\3\2\2\2$!\3\2\2\2%(\3")
+        buf.write("\7\2\2\"#\7\6\2\2#%\5\6\4\b$\36\3\2\2\2$!\3\2\2\2%(\3")
         buf.write("\2\2\2&$\3\2\2\2&\'\3\2\2\2\'\7\3\2\2\2(&\3\2\2\2)*\7")
         buf.write("\t\2\2*/\5\6\4\2+,\7\n\2\2,.\5\6\4\2-+\3\2\2\2.\61\3\2")
         buf.write("\2\2/-\3\2\2\2/\60\3\2\2\2\60\62\3\2\2\2\61/\3\2\2\2\62")
@@ -452,20 +452,20 @@ class ListParser ( Parser ):
             self.state = 26
             self._errHandler.sync(self)
             token = self._input.LA(1)
-            if token in [ListParser.NOME]:
-                localctx = ListParser.VariavelContext(self, localctx)
+            if token in [ListParser.T__6]:
+                localctx = ListParser.DefinicaoListaContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
 
                 self.state = 21
-                self.match(ListParser.NOME)
+                self.lista()
                 pass
-            elif token in [ListParser.T__6]:
-                localctx = ListParser.DefinicaoListaContext(self, localctx)
+            elif token in [ListParser.NOME]:
+                localctx = ListParser.VariavelContext(self, localctx)
                 self._ctx = localctx
                 _prevctx = localctx
                 self.state = 22
-                self.lista()
+                self.match(ListParser.NOME)
                 pass
             elif token in [ListParser.INT]:
                 localctx = ListParser.IntegerContext(self, localctx)
@@ -520,13 +520,13 @@ class ListParser ( Parser ):
                         localctx = ListParser.SomaContext(self, ListParser.ExpContext(self, _parentctx, _parentState))
                         self.pushNewRecursionContext(localctx, _startState, self.RULE_exp)
                         self.state = 31
-                        if not self.precpred(self._ctx, 6):
+                        if not self.precpred(self._ctx, 5):
                             from antlr4.error.Errors import FailedPredicateException
-                            raise FailedPredicateException(self, "self.precpred(self._ctx, 6)")
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 5)")
                         self.state = 32
                         self.match(ListParser.T__3)
                         self.state = 33
-                        self.exp(7)
+                        self.exp(6)
                         pass
 
              
@@ -628,7 +628,7 @@ class ListParser ( Parser ):
          
 
             if predIndex == 1:
-                return self.precpred(self._ctx, 6)
+                return self.precpred(self._ctx, 5)
          
 
 

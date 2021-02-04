@@ -15,7 +15,7 @@ class TranspilerVisitor(ListVisitor):
         return "\n".join([self.visit(node) for node in context.children])
 
     def visitImpressao(self, context):
-        return "print {}".format(self.visitChildren(context))
+        return "print({})".format(self.visitChildren(context))
 
     def visitVariavel(self, context):
         return context.getText()
@@ -32,6 +32,12 @@ class TranspilerVisitor(ListVisitor):
             self.visit(context.exp(1))
         )
 
+    def visitConcatenacao(self, context):
+        return "{} + {}".format(
+            self.visit(context.exp(0)),
+            self.visit(context.exp(1))
+        )
+
     def visitLista(self, context):
         last_exp = context.exp(0)
         values = [self.visit(last_exp)]
@@ -41,4 +47,4 @@ class TranspilerVisitor(ListVisitor):
             last_exp = context.exp(index)
             if last_exp:
                 values.append(self.visit(last_exp))
-        return "[{}]".format(",".join(values))
+        return "[{}]".format(", ".join(values))
