@@ -30,7 +30,6 @@ class ConsoleErrorListener(ErrorListener):
 if __name__ == "__main__":
     with open(sys.argv[1]) as _f:
         input_stream = antlr4.InputStream(_f.read())
-    import ipdb; ipdb.set_trace(context=10)
     lexer = ListLexer(input_stream)
     tokens = antlr4.CommonTokenStream(lexer)
     parser = ListParser(tokens)
@@ -39,4 +38,4 @@ if __name__ == "__main__":
     tree = parser.programa()
     if parser.getNumberOfSyntaxErrors() == 0:
         transpiler = TranspilerVisitor()
-        print("{}".format(transpiler.visit(tree)))
+        print("from listlang import *\n\n{}".format(transpiler.visit(tree)))

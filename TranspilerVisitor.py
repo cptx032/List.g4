@@ -27,16 +27,21 @@ class TranspilerVisitor(ListVisitor):
         )
 
     def visitSoma(self, context):
-        return "{} + {}".format(
-            self.visit(context.exp(0)),
-            self.visit(context.exp(1))
-        )
+        l_exp = self.visit(context.exp(0))
+        r_exp = self.visit(context.exp(1))
+        # see: https://stackoverflow.com/a/8294654
+        code = """
+{l_exp} + {r_exp} if ((type({l_exp}) == type({r_exp})) and (bool not in [type({l_exp}), type({r_exp})])) else (lambda e: (_ for _ in ()).throw(e))(ValueError('It is not possible sum "{l_exp}" with "{r_exp}"'))
+"""
+        return code.strip().format(l_exp=l_exp, r_exp=r_exp)
 
     def visitConcatenacao(self, context):
-        return "{} + {}".format(
-            self.visit(context.exp(0)),
-            self.visit(context.exp(1))
-        )
+        l_exp = self.visit(context.exp(0))
+        r_exp = self.visit(context.exp(1))
+        code = """
+{l_exp} * {r_exp} if (type({l_exp}) is ListList and type({r_exp}) is ListList) else (lambda e: (_ for _ in ()).throw(e))(ValueError('It is not possible concatenate "{l_exp}" with "{r_exp}"'))
+"""
+        return code.strip().format(l_exp=l_exp, r_exp=r_exp)
 
     def visitLista(self, context):
         last_exp = context.exp(0)
@@ -47,4 +52,4 @@ class TranspilerVisitor(ListVisitor):
             last_exp = context.exp(index)
             if last_exp:
                 values.append(self.visit(last_exp))
-        return "[{}]".format(", ".join(values))
+        return "ListList([{}])".format(", ".join(values))

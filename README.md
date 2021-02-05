@@ -35,3 +35,29 @@ List support two different operation over lists:
 
 - sum, in the form: `[1,2,3] + [1,2,3]`, that gives you another list `[2, 4, 6]`
 - concatenation, in the form: `[1,2,3] . [1,2,3]`, that gives you another list: `[1,2,3,1,2,3]`
+
+
+## Instalation of transpiler
+- Download and install java compilers
+- Download and install Python3 interpreter
+- Download and install ANTLR4. Exists a script named `get_antlr.sh` to download the tested version of antlr
+- run `pip install -r requirements.txt`
+- thats it!
+
+To run programs in List just do:
+
+```bash
+python main.py my_list_script.list > output.py
+```
+
+This will create a `output.py` file that can be run with:
+
+```bash
+python output.py
+```
+
+If you want to avoid create a new file to run the List script just do:
+
+```bash
+python main.py my_list_script.list | python
+```
